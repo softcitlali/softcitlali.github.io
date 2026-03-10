@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI工具使用指南 | 现代简约博客</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <script>
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            // 平滑滚动功能 - 仅适用于页面内锚点链接
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    const targetId = this.getAttribute('href');
+                    // 只处理页面内锚点，不阻止外部链接
+                    if (targetId !== '#' && targetId.startsWith('#')) {
+                        e.preventDefault();
+                        const targetElement = document.querySelector(targetId);
+                        if (targetElement) {
+                            window.scrollTo({
+                                top: targetElement.offsetTop - 80, // 减去导航栏高度
+                                behavior: 'smooth'
+                            });
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+    <header>
+        <nav>
+            <div class="container">
+                <a href="#" class="logo">AI工具指南</a>
+                <ul class="nav-links">
+                    <li><a href="#home">首页</a></li>
+                    <li><a href="#tools">AI工具</a></li>
+                    <li><a href="#tutorials">使用教程</a></li>
+                    <li><a href="#about">关于我们</a></li>
+                </ul>
+            </div>
+        </nav>
+        <div class="hero">
+            <div class="container">
+                <h1>探索AI工具的无限可能</h1>
+                <p>从入门到精通，全面掌握AI工具的使用方法</p>
+                <a href="#tools" class="btn">开始探索</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section id="home" class="section">
+            <div class="container">
+                <h2>欢迎来到AI工具指南</h2>
+                <p>在这个快速发展的AI时代，掌握各种AI工具的使用方法已经成为提升效率和创造力的关键。本博客将为您提供详细的AI工具使用指南，帮助您快速上手并充分发挥AI的潜力。</p>
+                <div class="features">
+                    <div class="feature-card">
+                        <div class="feature-icon">📚</div>
+                        <h3>全面的工具介绍</h3>
+                        <p>覆盖主流AI工具的详细介绍和使用方法</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🎯</div>
+                        <h3>实用的教程指南</h3>
+                        <p> step-by-step的教程，帮助您快速掌握工具使用</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">💡</div>
+                        <h3>创意应用案例</h3>
+                        <p>展示AI工具在不同领域的创新应用</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="tools" class="section bg-light">
+            <div class="container">
+                <h2>热门AI工具</h2>
+                <div class="tool-grid">
+                    <div class="tool-card">
+                        <div class="tool-icon">🤖</div>
+                        <h3>ChatGPT</h3>
+                        <p>OpenAI开发的强大语言模型，可用于对话、写作、编程等多种任务</p>
+                        <div class="tool-links">
+                            <a href="https://chat.openai.com" target="_blank" class="tool-website">官方网站</a>
+                            <a href="tutorials/chatgpt-tutorial.html" class="tool-link">查看教程</a>
+                        </div>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon">🎨</div>
+                        <h3>Midjourney</h3>
+                        <p>基于文本描述生成高质量图像的AI工具，适合创意设计</p>
+                        <div class="tool-links">
+                            <a href="https://www.midjourney.com" target="_blank" class="tool-website">官方网站</a>
+                            <a href="tutorials/midjourney-tutorial.html" class="tool-link">查看教程</a>
+                        </div>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon">💻</div>
+                        <h3>GitHub Copilot</h3>
+                        <p>AI驱动的代码助手，帮助开发者编写代码和解决编程问题</p>
+                        <div class="tool-links">
+                            <a href="https://github.com/features/copilot" target="_blank" class="tool-website">官方网站</a>
+                            <a href="tutorials/github-copilot-tutorial.html" class="tool-link">查看教程</a>
+                        </div>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon">🎬</div>
+                        <h3>Runway ML</h3>
+                        <p>AI视频编辑工具，提供多种视频处理和生成功能</p>
+                        <div class="tool-links">
+                            <a href="https://runwayml.com" target="_blank" class="tool-website">官方网站</a>
+                            <a href="tutorials/runway-ml-tutorial.html" class="tool-link">查看教程</a>
+                        </div>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon">🎥</div>
+                        <h3>Seedance</h3>
+                        <p>最新的AI视频生成模型，能够根据文本描述创建高质量的视频内容</p>
+                        <div class="tool-links">
+                            <a href="https://seedance.ai" target="_blank" class="tool-website">官方网站</a>
+                            <a href="tutorials/seedance-tutorial.html" class="tool-link">查看教程</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="tutorials" class="section">
+            <div class="container">
+                <h2>使用教程</h2>
+                <div class="tutorial-list">
+                    <div class="tutorial-card">
+                        <div class="tutorial-content">
+                            <span class="tutorial-tag">基础教程</span>
+                            <h3>如何使用ChatGPT提高工作效率</h3>
+                            <p>详细介绍ChatGPT的基本使用方法，以及如何将其应用到日常工作中</p>
+                            <a href="tutorials/chatgpt-tutorial.html" class="tutorial-link">阅读全文</a>
+                        </div>
+                    </div>
+                    <div class="tutorial-card">
+                        <div class="tutorial-content">
+                            <span class="tutorial-tag">高级技巧</span>
+                            <h3>Midjourney提示词优化指南</h3>
+                            <p>学习如何编写有效的提示词，生成高质量的AI图像</p>
+                            <a href="tutorials/midjourney-tutorial.html" class="tutorial-link">阅读全文</a>
+                        </div>
+                    </div>
+                    <div class="tutorial-card">
+                        <div class="tutorial-content">
+                            <span class="tutorial-tag">实用案例</span>
+                            <h3>使用GitHub Copilot加速开发流程</h3>
+                            <p>通过实际案例展示如何利用Copilot提高代码编写效率</p>
+                            <a href="tutorials/github-copilot-tutorial.html" class="tutorial-link">阅读全文</a>
+                        </div>
+                    </div>
+                    <div class="tutorial-card">
+                        <div class="tutorial-content">
+                            <span class="tutorial-tag">视频编辑</span>
+                            <h3>Runway ML视频编辑入门教程</h3>
+                            <p>学习如何使用Runway ML进行视频编辑和生成，提升视频制作效率</p>
+                            <a href="tutorials/runway-ml-tutorial.html" class="tutorial-link">阅读全文</a>
+                        </div>
+                    </div>
+                    <div class="tutorial-card">
+                        <div class="tutorial-content">
+                            <span class="tutorial-tag">创意工具</span>
+                            <h3>Seedance AI舞蹈生成教程</h3>
+                            <p>学习如何使用Seedance创建逼真的舞蹈动作，根据音乐或提示词生成专业舞蹈</p>
+                            <a href="tutorials/seedance-tutorial.html" class="tutorial-link">阅读全文</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="section bg-light">
+            <div class="container">
+                <h2>关于我们</h2>
+                <p>本网页由 <strong>softcitlali</strong> 与 <strong>trae</strong> 共同制作，我们是一群AI爱好者，致力于分享AI工具的使用方法和技巧，帮助更多人了解和利用AI技术。通过本博客，我们希望为您提供有价值的信息和资源，让您在AI时代脱颖而出。</p>
+                <p>我们相信AI技术的潜力，希望通过这个平台，让更多人能够轻松掌握各种AI工具的使用方法，发挥AI的最大价值。</p>
+                <div class="contact-info">
+                    <p>如有任何问题或建议，欢迎联系我们：</p>
+                    <a href="mailto:contact@ai-tool-guide.com" class="contact-link">contact@ai-tool-guide.com</a>
+                </div>
+            </div>
+        </section>
+
+
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">AI工具指南</div>
+                <div class="footer-links">
+                    <a href="#home">首页</a>
+                    <a href="#tools">AI工具</a>
+                    <a href="#tutorials">使用教程</a>
+                    <a href="#about">关于我们</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 AI工具指南. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
