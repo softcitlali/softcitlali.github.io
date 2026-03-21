@@ -1,17 +1,31 @@
 // Supabase 数据操作 API
 // 提供工具、教程、用户、评论、收藏等数据的增删改查功能
 
-// 确保 supabaseClient 可用
-const supabaseClient = window.supabaseClient;
+// 等待 supabaseClient 可用
+let supabaseClient;
 
-if (!supabaseClient) {
-    console.error('错误：supabaseClient 未初始化，请检查 Supabase 配置');
+function checkSupabaseClient() {
+    if (window.supabaseClient) {
+        supabaseClient = window.supabaseClient;
+        console.log('db-operations: supabaseClient 已可用');
+    } else {
+        // 每秒检查一次，直到 supabaseClient 可用
+        setTimeout(checkSupabaseClient, 100);
+    }
 }
+
+// 开始检查
+checkSupabaseClient();
 
 // ==================== 工具相关操作 ====================
 
 // 获取所有AI工具
 async function getAllTools() {
+    if (!supabaseClient) {
+        console.error('错误：supabaseClient 未初始化');
+        return [];
+    }
+    
     const { data, error } = await supabaseClient
         .from('tools')
         .select('*')
@@ -26,6 +40,11 @@ async function getAllTools() {
 
 // 获取单个工具详情
 async function getToolById(toolId) {
+    if (!supabaseClient) {
+        console.error('错误：supabaseClient 未初始化');
+        return null;
+    }
+    
     const { data, error } = await supabaseClient
         .from('tools')
         .select('*')
@@ -41,6 +60,11 @@ async function getToolById(toolId) {
 
 // 搜索工具
 async function searchTools(keyword) {
+    if (!supabaseClient) {
+        console.error('错误：supabaseClient 未初始化');
+        return [];
+    }
+    
     const { data, error } = await supabaseClient
         .from('tools')
         .select('*')
@@ -57,6 +81,11 @@ async function searchTools(keyword) {
 
 // 获取所有教程
 async function getAllTutorials() {
+    if (!supabaseClient) {
+        console.error('错误：supabaseClient 未初始化');
+        return [];
+    }
+    
     const { data, error } = await supabaseClient
         .from('tutorials')
         .select(`
@@ -78,6 +107,11 @@ async function getAllTutorials() {
 
 // 获取单个工具的所有教程
 async function getTutorialsByToolId(toolId) {
+    if (!supabaseClient) {
+        console.error('错误：supabaseClient 未初始化');
+        return [];
+    }
+    
     const { data, error } = await supabaseClient
         .from('tutorials')
         .select('*')
@@ -93,6 +127,11 @@ async function getTutorialsByToolId(toolId) {
 
 // 获取教程详情
 async function getTutorialById(tutorialId) {
+    if (!supabaseClient) {
+        console.error('错误：supabaseClient 未初始化');
+        return null;
+    }
+    
     const { data, error } = await supabaseClient
         .from('tutorials')
         .select(`
@@ -118,6 +157,11 @@ async function getTutorialById(tutorialId) {
 
 // 注册新用户
 async function signUp(email, password, username) {
+    if (!supabaseClient) {
+        console.error('错误：supabaseClient 未初始化');
+        return { success: false, error: 'supabaseClient 未初始化' };
+    }
+    
     const { data, error } = await supabaseClient.auth.signUp({
         email: email,
         password: password,
@@ -138,6 +182,11 @@ async function signUp(email, password, username) {
 
 // 登录
 async function signIn(email, password) {
+    if (!supabaseClient) {
+        console.error('错误：supabaseClient 未初始化');
+        return { success: false, error: 'supabaseClient 未初始化' };
+    }
+    
     const { data, error } = await supabaseClient.auth.signInWithPassword({
         email: email,
         password: password
@@ -153,6 +202,11 @@ async function signIn(email, password) {
 
 // 登出
 async function signOut() {
+    if (!supabaseClient) {
+        console.error('错误：supabaseClient 未初始化');
+        return { success: false, error: 'supabaseClient 未初始化' };
+    }
+    
     const { error } = await supabaseClient.auth.signOut();
     
     if (error) {
@@ -165,12 +219,22 @@ async function signOut() {
 
 // 获取当前用户
 async function getCurrentUser() {
+    if (!supabaseClient) {
+        console.error('错误：supabaseClient 未初始化');
+        return null;
+    }
+    
     const { data: { user } } = await supabaseClient.auth.getUser();
     return user;
 }
 
 // 获取用户资料
 async function getUserProfile(userId) {
+    if (!supabaseClient) {
+        console.error('错误：supabaseClient 未初始化');
+        return null;
+    }
+    
     const { data, error } = await supabaseClient
         .from('profiles')
         .select('*')
@@ -186,6 +250,11 @@ async function getUserProfile(userId) {
 
 // 更新用户资料
 async function updateUserProfile(userId, updates) {
+    if (!supabaseClient) {
+        console.error('错误：supabaseClient 未初始化');
+        return { success: false, error: 'supabaseClient 未初始化' };
+    }
+    
     const { data, error } = await supabaseClient
         .from('profiles')
         .update(updates)
@@ -205,6 +274,11 @@ async function updateUserProfile(userId, updates) {
 
 // 获取教程评论
 async function getCommentsByTutorialId(tutorialId) {
+    if (!supabaseClient) {
+        console.error('错误：supabaseClient 未初始化');
+        return [];
+    }
+    
     const { data, error } = await supabaseClient
         .from('comments')
         .select(`
@@ -227,6 +301,11 @@ async function getCommentsByTutorialId(tutorialId) {
 
 // 添加评论
 async function addComment(tutorialId, content) {
+    if (!supabaseClient) {
+        console.error('错误：supabaseClient 未初始化');
+        return { success: false, error: 'supabaseClient 未初始化' };
+    }
+    
     const user = await getCurrentUser();
     if (!user) {
         return { success: false, error: '请先登录' };
@@ -254,6 +333,11 @@ async function addComment(tutorialId, content) {
 
 // 删除评论
 async function deleteComment(commentId) {
+    if (!supabaseClient) {
+        console.error('错误：supabaseClient 未初始化');
+        return { success: false, error: 'supabaseClient 未初始化' };
+    }
+    
     const { error } = await supabaseClient
         .from('comments')
         .delete()
@@ -271,6 +355,11 @@ async function deleteComment(commentId) {
 
 // 获取用户收藏
 async function getUserFavorites(userId) {
+    if (!supabaseClient) {
+        console.error('错误：supabaseClient 未初始化');
+        return [];
+    }
+    
     const { data, error } = await supabaseClient
         .from('favorites')
         .select(`
@@ -294,6 +383,11 @@ async function getUserFavorites(userId) {
 
 // 添加收藏
 async function addFavorite(toolId) {
+    if (!supabaseClient) {
+        console.error('错误：supabaseClient 未初始化');
+        return { success: false, error: 'supabaseClient 未初始化' };
+    }
+    
     const user = await getCurrentUser();
     if (!user) {
         return { success: false, error: '请先登录' };
@@ -320,6 +414,11 @@ async function addFavorite(toolId) {
 
 // 取消收藏
 async function removeFavorite(toolId) {
+    if (!supabaseClient) {
+        console.error('错误：supabaseClient 未初始化');
+        return { success: false, error: 'supabaseClient 未初始化' };
+    }
+    
     const user = await getCurrentUser();
     if (!user) {
         return { success: false, error: '请先登录' };
@@ -341,6 +440,11 @@ async function removeFavorite(toolId) {
 
 // 检查是否已收藏
 async function checkIsFavorited(toolId) {
+    if (!supabaseClient) {
+        console.error('错误：supabaseClient 未初始化');
+        return false;
+    }
+    
     const user = await getCurrentUser();
     if (!user) {
         return false;
@@ -365,6 +469,11 @@ async function checkIsFavorited(toolId) {
 
 // 获取工具收藏数量
 async function getToolFavoriteCount(toolId) {
+    if (!supabaseClient) {
+        console.error('错误：supabaseClient 未初始化');
+        return 0;
+    }
+    
     const { count, error } = await supabaseClient
         .from('favorites')
         .select('*', { count: 'exact', head: true })
@@ -380,6 +489,11 @@ async function getToolFavoriteCount(toolId) {
 
 // 获取教程评论数量
 async function getTutorialCommentCount(tutorialId) {
+    if (!supabaseClient) {
+        console.error('错误：supabaseClient 未初始化');
+        return 0;
+    }
+    
     const { count, error } = await supabaseClient
         .from('comments')
         .select('*', { count: 'exact', head: true })
