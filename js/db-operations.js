@@ -1,6 +1,13 @@
 // Supabase 数据操作 API
 // 提供工具、教程、用户、评论、收藏等数据的增删改查功能
 
+// 确保 supabaseClient 可用
+const supabaseClient = window.supabaseClient;
+
+if (!supabaseClient) {
+    console.error('错误：supabaseClient 未初始化，请检查 Supabase 配置');
+}
+
 // ==================== 工具相关操作 ====================
 
 // 获取所有AI工具
