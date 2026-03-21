@@ -213,29 +213,17 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- Supabase 配置和数据库操作 -->
     <script>
-        // 等待 DOM 加载完成
-        document.addEventListener('DOMContentLoaded', function() {
-            // 检查 Supabase SDK 是否加载
-            if (window.supabase) {
-                try {
-                    // Supabase 配置
-                    const SUPABASE_URL = 'https://roltldpcislhvzqmyliy.supabase.co';
-                    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJvbHRsZHBjaXNsaHZ6cW15bGl5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQwNTM2MzMsImV4cCI6MjA4OTYyOTYzM30.kWhRUnH_STmFRM9pQ-VBUFY4pPSUiEz9nehssm08Psg';
-                    
-                    // 初始化 Supabase 客户端
-                    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-                    
-                    // 导出供其他模块使用
-                    window.supabaseClient = supabase;
-                    
-                    console.log('Supabase 初始化成功');
-                } catch (error) {
-                    console.error('Supabase 初始化失败:', error);
-                }
-            } else {
-                console.error('Supabase SDK 未加载');
-            }
-        });
+        // Supabase 配置
+        const SUPABASE_URL = 'https://roltldpcislhvzqmyliy.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJvbHRsZHBjaXNsaHZ6cW15bGl5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQwNTM2MzMsImV4cCI6MjA4OTYyOTYzM30.kWhRUnH_STmFRM9pQ-VBUFY4pPSUiEz9nehssm08Psg';
+        
+        // 初始化 Supabase 客户端
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        // 导出供其他模块使用
+        window.supabaseClient = supabase;
+        
+        console.log('Supabase 初始化成功');
     </script>
     <!-- 数据库操作 -->
     <script src="js/db-operations.js"></script>
