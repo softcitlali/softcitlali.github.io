@@ -225,35 +225,6 @@
             </div>
         </section>
 
-        <section id="ai-assistant" class="section">
-            <div class="container">
-                <h2>AI工具智能助手</h2>
-                <p>有疑问？让AI助手帮你快速了解各种AI工具的特色和选择建议</p>
-                <div class="ai-assistant-container">
-                    <div class="chat-messages" id="chat-messages">
-                        <div class="message bot-message">
-                            <div class="message-content">
-                                <p>你好！我是AI工具智能助手，有什么可以帮你的？</p>
-                                <p>你可以问我：</p>
-                                <ul>
-                                    <li>这些AI各自的特色与区别是什么？</li>
-                                    <li>如果我想做XXXX事情，更推荐我用哪个AI？</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="chat-input">
-                        <input type="text" id="user-input" placeholder="输入你的问题..." />
-                        <button id="send-btn">发送</button>
-                    </div>
-                    <div class="quick-questions">
-                        <button class="quick-question" data-question="这些AI各自的特色与区别是什么？">AI工具特色与区别</button>
-                        <button class="quick-question" data-question="如果我想写代码，更推荐我用哪个AI？">写代码推荐</button>
-                        <button class="quick-question" data-question="如果我想生成图像，更推荐我用哪个AI？">生成图像推荐</button>
-                        <button class="quick-question" data-question="如果我想生成视频，更推荐我用哪个AI？">生成视频推荐</button>
-                    </div>
-                </div>
-            </div>
         </section>
 
 
@@ -275,6 +246,42 @@
             </div>
         </div>
     </footer>
+
+    <!-- AI助手悬浮窗 -->
+    <div class="ai-assistant-floating">
+        <button class="ai-assistant-toggle" id="ai-assistant-toggle">
+            <span class="ai-icon">🤖</span>
+            <span class="ai-text">AI助手</span>
+        </button>
+        <div class="ai-assistant-window" id="ai-assistant-window">
+            <div class="ai-assistant-header">
+                <h3>AI工具智能助手</h3>
+                <button class="ai-assistant-close" id="ai-assistant-close">×</button>
+            </div>
+            <div class="chat-messages" id="chat-messages">
+                <div class="message bot-message">
+                    <div class="message-content">
+                        <p>你好！我是AI工具智能助手，有什么可以帮你的？</p>
+                        <p>你可以问我：</p>
+                        <ul>
+                            <li>这些AI各自的特色与区别是什么？</li>
+                            <li>如果我想做XXXX事情，更推荐我用哪个AI？</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="chat-input">
+                <input type="text" id="user-input" placeholder="输入你的问题..." />
+                <button id="send-btn">发送</button>
+            </div>
+            <div class="quick-questions">
+                <button class="quick-question" data-question="这些AI各自的特色与区别是什么？">AI工具特色与区别</button>
+                <button class="quick-question" data-question="如果我想写代码，更推荐我用哪个AI？">写代码推荐</button>
+                <button class="quick-question" data-question="如果我想生成图像，更推荐我用哪个AI？">生成图像推荐</button>
+                <button class="quick-question" data-question="如果我想生成视频，更推荐我用哪个AI？">生成视频推荐</button>
+            </div>
+        </div>
+    </div>
     
     <!-- Supabase SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -313,6 +320,20 @@
             const userInput = document.getElementById('user-input');
             const sendBtn = document.getElementById('send-btn');
             const quickQuestions = document.querySelectorAll('.quick-question');
+            const aiAssistantToggle = document.getElementById('ai-assistant-toggle');
+            const aiAssistantWindow = document.getElementById('ai-assistant-window');
+            const aiAssistantClose = document.getElementById('ai-assistant-close');
+            const aiAssistantFloating = document.querySelector('.ai-assistant-floating');
+
+            // 切换AI助手窗口
+            function toggleAIWindow() {
+                aiAssistantWindow.classList.toggle('active');
+            }
+
+            // 关闭AI助手窗口
+            function closeAIWindow() {
+                aiAssistantWindow.classList.remove('active');
+            }
 
             // 发送消息函数
             function sendMessage() {
@@ -482,6 +503,19 @@
                     userInput.value = question;
                     sendMessage();
                 });
+            });
+
+            // AI助手切换按钮点击事件
+            aiAssistantToggle.addEventListener('click', toggleAIWindow);
+
+            // 关闭按钮点击事件
+            aiAssistantClose.addEventListener('click', closeAIWindow);
+
+            // 点击窗口外部关闭
+            document.addEventListener('click', function(e) {
+                if (!aiAssistantFloating.contains(e.target)) {
+                    closeAIWindow();
+                }
             });
         });
     </script>
