@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI工具指南</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Transformers.js库 -->
-    <script src="https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.0/dist/transformers.min.js"></script>
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -319,75 +318,7 @@
     <script src="js/db-operations.js"></script>
     <!-- AI助手功能 -->
     <script>
-        // 全局变量
-        let model = null;
-        let isLoading = false;
-        let transformersLoaded = false;
-        let loadAttempts = 0;
-        const MAX_LOAD_ATTEMPTS = 5;
 
-        // 检查Transformers.js是否加载
-        function checkTransformersLoaded() {
-            if (window.transformers) {
-                transformersLoaded = true;
-                console.log('Transformers.js加载成功!');
-                return true;
-            } else {
-                console.log('Transformers.js尚未加载...');
-                return false;
-            }
-        }
-
-        // 加载模型
-        async function loadModel() {
-            if (model || isLoading) return;
-            
-            isLoading = true;
-            try {
-                console.log('正在加载AI模型...');
-                
-                // 检查Transformers.js是否可用
-                if (!window.transformers) {
-                    console.log('Transformers.js未加载，使用备用方案');
-                    model = 'fallback';
-                    return;
-                }
-                
-                // 使用更轻量级的模型
-                console.log('开始加载T5-small模型...');
-                model = await window.transformers.pipeline('text2text-generation', 'Xenova/t5-small');
-                console.log('模型加载成功!');
-            } catch (error) {
-                console.error('模型加载失败:', error);
-                // 加载失败时使用备用方案
-                model = 'fallback';
-            } finally {
-                isLoading = false;
-            }
-        }
-
-        // 尝试加载Transformers.js
-        function attemptLoadTransformers() {
-            loadAttempts++;
-            if (loadAttempts > MAX_LOAD_ATTEMPTS) {
-                console.log('Transformers.js加载失败，使用备用方案');
-                model = 'fallback';
-                return;
-            }
-            
-            if (checkTransformersLoaded()) {
-                loadModel();
-            } else {
-                console.log(`尝试重新加载Transformers.js (${loadAttempts}/${MAX_LOAD_ATTEMPTS})`);
-                setTimeout(attemptLoadTransformers, 1000);
-            }
-        }
-
-        // 页面加载完成后执行
-        window.addEventListener('load', function() {
-            console.log('页面加载完成，开始检查Transformers.js...');
-            attemptLoadTransformers();
-        });
 
         document.addEventListener('DOMContentLoaded', function() {
             const chatMessages = document.getElementById('chat-messages');
@@ -412,7 +343,7 @@
 
 
             // 发送消息函数
-            async function sendMessage() {
+            function sendMessage() {
                 const message = userInput.value.trim();
                 if (message) {
                     // 添加用户消息
@@ -422,46 +353,12 @@
                     // 显示正在输入
                     showTypingIndicator();
 
-                    try {
-                        // 确保模型已加载
-                        if (!model) {
-                            await loadModel();
-                        }
-
-                        // 检查是否是备用模式
-                        if (model === 'fallback') {
-                            console.log('使用备用回复方案');
-                            // 使用备用回复
-                            const response = getAIResponse(message);
-                            removeTypingIndicator();
-                            addMessage(response, 'bot');
-                            return;
-                        }
-
-                        // 准备提示词
-                        const prompt = `你是AI工具指南网站的智能助手，专门帮助用户了解各种AI工具的特色和选择建议。
-网站介绍的AI工具包括：ChatGPT、Midjourney、GitHub Copilot、Runway ML、Seedance、DeepSeek、豆包、Gemini、Sora。
-用户问题：${message}
-请根据用户的问题，提供专业、详细、友好的回答。`;
-
-                        // 生成回复
-                        console.log('调用AI模型生成回复...');
-                        const response = await model(prompt, {
-                            max_length: 300,
-                            temperature: 0.7
-                        });
-                        console.log('模型响应:', response);
-                        const reply = response[0]?.generated_text || '抱歉，我无法理解您的问题。';
-
+                    // 使用预设回复
+                    setTimeout(() => {
                         removeTypingIndicator();
-                        addMessage(reply, 'bot');
-                    } catch (error) {
-                        console.error('生成回复失败:', error);
-                        removeTypingIndicator();
-                        // 出错时使用备用回复
-                        const fallbackResponse = getAIResponse(message);
-                        addMessage(fallbackResponse, 'bot');
-                    }
+                        const response = getAIResponse(message);
+                        addMessage(response, 'bot');
+                    }, 1000);
                 }
             }
 
