@@ -374,8 +374,9 @@
                         return;
                     }
                     
-                    // 使用更简单的模型
-                    model = await window.transformers.pipeline('text-generation', 'Xenova/gpt2');
+                    // 使用更轻量级的模型
+                    console.log('开始加载T5-small模型...');
+                    model = await window.transformers.pipeline('text2text-generation', 'Xenova/t5-small');
                     console.log('模型加载成功!');
                 } catch (error) {
                     console.error('模型加载失败:', error);
@@ -405,6 +406,7 @@
 
                         // 检查是否是备用模式
                         if (model === 'fallback') {
+                            console.log('使用备用回复方案');
                             // 使用备用回复
                             const response = getAIResponse(message);
                             removeTypingIndicator();
@@ -414,37 +416,27 @@
 
                         // 准备提示词
                         const prompt = `你是AI工具指南网站的智能助手，专门帮助用户了解各种AI工具的特色和选择建议。
-
-网站介绍的AI工具包括：
-- ChatGPT：OpenAI开发的通用语言模型，擅长对话、写作、编程等多种任务
-- Midjourney：专注于图像生成，基于文本描述创建高质量图像
-- GitHub Copilot：专为开发者设计的代码助手
-- Runway ML：AI视频编辑工具
-- Seedance：AI视频生成模型
-- DeepSeek：深度学习AI助手，专注于代码生成和问题解决
-- 豆包：字节跳动推出的AI助手，支持多轮对话
-- Gemini：Google的多模态AI模型
-- Sora：OpenAI的视频生成模型
-
+网站介绍的AI工具包括：ChatGPT、Midjourney、GitHub Copilot、Runway ML、Seedance、DeepSeek、豆包、Gemini、Sora。
 用户问题：${message}
-
 请根据用户的问题，提供专业、详细、友好的回答。`;
 
                         // 生成回复
+                        console.log('调用AI模型生成回复...');
                         const response = await model(prompt, {
-                            max_length: 500,
+                            max_length: 300,
                             temperature: 0.7
                         });
+                        console.log('模型响应:', response);
                         const reply = response[0]?.generated_text || '抱歉，我无法理解您的问题。';
 
                         removeTypingIndicator();
                         addMessage(reply, 'bot');
                     } catch (error) {
+                        console.error('生成回复失败:', error);
                         removeTypingIndicator();
                         // 出错时使用备用回复
                         const fallbackResponse = getAIResponse(message);
                         addMessage(fallbackResponse, 'bot');
-                        console.error('生成回复失败:', error);
                     }
                 }
             }
