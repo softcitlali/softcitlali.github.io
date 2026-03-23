@@ -319,6 +319,76 @@
     <script src="js/db-operations.js"></script>
     <!-- AI助手功能 -->
     <script>
+        // 全局变量
+        let model = null;
+        let isLoading = false;
+        let transformersLoaded = false;
+        let loadAttempts = 0;
+        const MAX_LOAD_ATTEMPTS = 5;
+
+        // 检查Transformers.js是否加载
+        function checkTransformersLoaded() {
+            if (window.transformers) {
+                transformersLoaded = true;
+                console.log('Transformers.js加载成功!');
+                return true;
+            } else {
+                console.log('Transformers.js尚未加载...');
+                return false;
+            }
+        }
+
+        // 加载模型
+        async function loadModel() {
+            if (model || isLoading) return;
+            
+            isLoading = true;
+            try {
+                console.log('正在加载AI模型...');
+                
+                // 检查Transformers.js是否可用
+                if (!window.transformers) {
+                    console.log('Transformers.js未加载，使用备用方案');
+                    model = 'fallback';
+                    return;
+                }
+                
+                // 使用更轻量级的模型
+                console.log('开始加载T5-small模型...');
+                model = await window.transformers.pipeline('text2text-generation', 'Xenova/t5-small');
+                console.log('模型加载成功!');
+            } catch (error) {
+                console.error('模型加载失败:', error);
+                // 加载失败时使用备用方案
+                model = 'fallback';
+            } finally {
+                isLoading = false;
+            }
+        }
+
+        // 尝试加载Transformers.js
+        function attemptLoadTransformers() {
+            loadAttempts++;
+            if (loadAttempts > MAX_LOAD_ATTEMPTS) {
+                console.log('Transformers.js加载失败，使用备用方案');
+                model = 'fallback';
+                return;
+            }
+            
+            if (checkTransformersLoaded()) {
+                loadModel();
+            } else {
+                console.log(`尝试重新加载Transformers.js (${loadAttempts}/${MAX_LOAD_ATTEMPTS})`);
+                setTimeout(attemptLoadTransformers, 1000);
+            }
+        }
+
+        // 页面加载完成后执行
+        window.addEventListener('load', function() {
+            console.log('页面加载完成，开始检查Transformers.js...');
+            attemptLoadTransformers();
+        });
+
         document.addEventListener('DOMContentLoaded', function() {
             const chatMessages = document.getElementById('chat-messages');
             const userInput = document.getElementById('user-input');
@@ -328,26 +398,6 @@
             const aiAssistantWindow = document.getElementById('ai-assistant-window');
             const aiAssistantClose = document.getElementById('ai-assistant-close');
             const aiAssistantFloating = document.querySelector('.ai-assistant-floating');
-            
-            // 全局变量
-            let model = null;
-            let isLoading = false;
-            let transformersLoaded = false;
-
-            // 检查Transformers.js是否加载
-            function checkTransformersLoaded() {
-                if (window.transformers) {
-                    transformersLoaded = true;
-                    console.log('Transformers.js加载成功!');
-                } else {
-                    console.log('Transformers.js尚未加载...');
-                }
-            }
-
-            // 检查Transformers.js是否加载
-            checkTransformersLoaded();
-            // 预加载模型
-            loadModel();
 
             // 切换AI助手窗口
             function toggleAIWindow() {
@@ -359,33 +409,7 @@
                 aiAssistantWindow.classList.remove('active');
             }
 
-            // 加载模型
-            async function loadModel() {
-                if (model || isLoading) return;
-                
-                isLoading = true;
-                try {
-                    console.log('正在加载AI模型...');
-                    
-                    // 检查Transformers.js是否可用
-                    if (!window.transformers) {
-                        console.log('Transformers.js未加载，使用备用方案');
-                        model = 'fallback';
-                        return;
-                    }
-                    
-                    // 使用更轻量级的模型
-                    console.log('开始加载T5-small模型...');
-                    model = await window.transformers.pipeline('text2text-generation', 'Xenova/t5-small');
-                    console.log('模型加载成功!');
-                } catch (error) {
-                    console.error('模型加载失败:', error);
-                    // 加载失败时使用备用方案
-                    model = 'fallback';
-                } finally {
-                    isLoading = false;
-                }
-            }
+
 
             // 发送消息函数
             async function sendMessage() {
