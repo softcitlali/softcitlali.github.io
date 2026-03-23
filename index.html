@@ -349,11 +349,13 @@
                 isLoading = true;
                 try {
                     console.log('正在加载AI模型...');
-                    // 简单的对话模型
-                    model = await window.transformers.pipeline('conversational', 'Xenova/distilbert-base-uncased-finetuned-sst-2-english');
+                    // 使用更简单的模型和正确的调用方式
+                    model = await window.transformers.pipeline('text-generation', 'Xenova/gpt2');
                     console.log('模型加载成功!');
                 } catch (error) {
                     console.error('模型加载失败:', error);
+                    // 加载失败时使用备用方案
+                    model = 'fallback';
                 } finally {
                     isLoading = false;
                 }
@@ -376,11 +378,17 @@
                             await loadModel();
                         }
 
-                        // 准备对话历史
-                        const conversation = [
-                            {
-                                role: 'system',
-                                content: `你是AI工具指南网站的智能助手，专门帮助用户了解各种AI工具的特色和选择建议。
+                        // 检查是否是备用模式
+                        if (model === 'fallback') {
+                            // 使用备用回复
+                            const response = getAIResponse(message);
+                            removeTypingIndicator();
+                            addMessage(response, 'bot');
+                            return;
+                        }
+
+                        // 准备提示词
+                        const prompt = `你是AI工具指南网站的智能助手，专门帮助用户了解各种AI工具的特色和选择建议。
 
 网站介绍的AI工具包括：
 - ChatGPT：OpenAI开发的通用语言模型，擅长对话、写作、编程等多种任务
@@ -393,23 +401,24 @@
 - Gemini：Google的多模态AI模型
 - Sora：OpenAI的视频生成模型
 
-请根据用户的问题，提供专业、详细、友好的回答。`
-                            },
-                            {
-                                role: 'user',
-                                content: message
-                            }
-                        ];
+用户问题：${message}
+
+请根据用户的问题，提供专业、详细、友好的回答。`;
 
                         // 生成回复
-                        const response = await model(conversation);
+                        const response = await model(prompt, {
+                            max_length: 500,
+                            temperature: 0.7
+                        });
                         const reply = response[0]?.generated_text || '抱歉，我无法理解您的问题。';
 
                         removeTypingIndicator();
                         addMessage(reply, 'bot');
                     } catch (error) {
                         removeTypingIndicator();
-                        addMessage('抱歉，AI助手暂时无法响应，请稍后再试。', 'bot');
+                        // 出错时使用备用回复
+                        const fallbackResponse = getAIResponse(message);
+                        addMessage(fallbackResponse, 'bot');
                         console.error('生成回复失败:', error);
                     }
                 }
