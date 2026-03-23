@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI工具使用指南 | 现代简约博客</title>
+    <title>AI工具指南</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.0"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -327,6 +328,10 @@
             const aiAssistantClose = document.getElementById('ai-assistant-close');
             const aiAssistantFloating = document.querySelector('.ai-assistant-floating');
 
+            // 全局变量
+            let model = null;
+            let isLoading = false;
+
             // 切换AI助手窗口
             function toggleAIWindow() {
                 aiAssistantWindow.classList.toggle('active');
@@ -337,8 +342,25 @@
                 aiAssistantWindow.classList.remove('active');
             }
 
+            // 加载模型
+            async function loadModel() {
+                if (model || isLoading) return;
+                
+                isLoading = true;
+                try {
+                    console.log('正在加载AI模型...');
+                    // 简单的对话模型
+                    model = await window.transformers.pipeline('conversational', 'Xenova/distilbert-base-uncased-finetuned-sst-2-english');
+                    console.log('模型加载成功!');
+                } catch (error) {
+                    console.error('模型加载失败:', error);
+                } finally {
+                    isLoading = false;
+                }
+            }
+
             // 发送消息函数
-            function sendMessage() {
+            async function sendMessage() {
                 const message = userInput.value.trim();
                 if (message) {
                     // 添加用户消息
@@ -348,12 +370,48 @@
                     // 显示正在输入
                     showTypingIndicator();
 
-                    // 模拟AI回复
-                    setTimeout(() => {
+                    try {
+                        // 确保模型已加载
+                        if (!model) {
+                            await loadModel();
+                        }
+
+                        // 准备对话历史
+                        const conversation = [
+                            {
+                                role: 'system',
+                                content: `你是AI工具指南网站的智能助手，专门帮助用户了解各种AI工具的特色和选择建议。
+
+网站介绍的AI工具包括：
+- ChatGPT：OpenAI开发的通用语言模型，擅长对话、写作、编程等多种任务
+- Midjourney：专注于图像生成，基于文本描述创建高质量图像
+- GitHub Copilot：专为开发者设计的代码助手
+- Runway ML：AI视频编辑工具
+- Seedance：AI视频生成模型
+- DeepSeek：深度学习AI助手，专注于代码生成和问题解决
+- 豆包：字节跳动推出的AI助手，支持多轮对话
+- Gemini：Google的多模态AI模型
+- Sora：OpenAI的视频生成模型
+
+请根据用户的问题，提供专业、详细、友好的回答。`
+                            },
+                            {
+                                role: 'user',
+                                content: message
+                            }
+                        ];
+
+                        // 生成回复
+                        const response = await model(conversation);
+                        const reply = response[0]?.generated_text || '抱歉，我无法理解您的问题。';
+
                         removeTypingIndicator();
-                        const response = getAIResponse(message);
-                        addMessage(response, 'bot');
-                    }, 1000);
+                        addMessage(reply, 'bot');
+                    } catch (error) {
+                        removeTypingIndicator();
+                        addMessage('抱歉，AI助手暂时无法响应，请稍后再试。', 'bot');
+                        console.error('生成回复失败:', error);
+                    }
                 }
             }
 
