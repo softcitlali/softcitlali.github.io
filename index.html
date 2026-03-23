@@ -225,6 +225,37 @@
             </div>
         </section>
 
+        <section id="ai-assistant" class="section">
+            <div class="container">
+                <h2>AI工具智能助手</h2>
+                <p>有疑问？让AI助手帮你快速了解各种AI工具的特色和选择建议</p>
+                <div class="ai-assistant-container">
+                    <div class="chat-messages" id="chat-messages">
+                        <div class="message bot-message">
+                            <div class="message-content">
+                                <p>你好！我是AI工具智能助手，有什么可以帮你的？</p>
+                                <p>你可以问我：</p>
+                                <ul>
+                                    <li>这些AI各自的特色与区别是什么？</li>
+                                    <li>如果我想做XXXX事情，更推荐我用哪个AI？</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chat-input">
+                        <input type="text" id="user-input" placeholder="输入你的问题..." />
+                        <button id="send-btn">发送</button>
+                    </div>
+                    <div class="quick-questions">
+                        <button class="quick-question" data-question="这些AI各自的特色与区别是什么？">AI工具特色与区别</button>
+                        <button class="quick-question" data-question="如果我想写代码，更推荐我用哪个AI？">写代码推荐</button>
+                        <button class="quick-question" data-question="如果我想生成图像，更推荐我用哪个AI？">生成图像推荐</button>
+                        <button class="quick-question" data-question="如果我想生成视频，更推荐我用哪个AI？">生成视频推荐</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
 
     </main>
 
@@ -275,5 +306,184 @@
     </script>
     <!-- 数据库操作 -->
     <script src="js/db-operations.js"></script>
+    <!-- AI助手功能 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatMessages = document.getElementById('chat-messages');
+            const userInput = document.getElementById('user-input');
+            const sendBtn = document.getElementById('send-btn');
+            const quickQuestions = document.querySelectorAll('.quick-question');
+
+            // 发送消息函数
+            function sendMessage() {
+                const message = userInput.value.trim();
+                if (message) {
+                    // 添加用户消息
+                    addMessage(message, 'user');
+                    userInput.value = '';
+
+                    // 显示正在输入
+                    showTypingIndicator();
+
+                    // 模拟AI回复
+                    setTimeout(() => {
+                        removeTypingIndicator();
+                        const response = getAIResponse(message);
+                        addMessage(response, 'bot');
+                    }, 1000);
+                }
+            }
+
+            // 添加消息到聊天界面
+            function addMessage(text, sender) {
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('message', sender + '-message');
+                messageDiv.innerHTML = `
+                    <div class="message-content">
+                        ${text}
+                    </div>
+                `;
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            // 显示正在输入指示器
+            function showTypingIndicator() {
+                const typingDiv = document.createElement('div');
+                typingDiv.classList.add('message', 'bot-message', 'typing-indicator');
+                typingDiv.innerHTML = `
+                    <div class="message-content">
+                        <p>正在思考...</p>
+                    </div>
+                `;
+                typingDiv.id = 'typing-indicator';
+                chatMessages.appendChild(typingDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            // 移除正在输入指示器
+            function removeTypingIndicator() {
+                const typingDiv = document.getElementById('typing-indicator');
+                if (typingDiv) {
+                    typingDiv.remove();
+                }
+            }
+
+            // AI回复逻辑
+            function getAIResponse(message) {
+                message = message.toLowerCase();
+
+                // 处理关于AI工具特色的问题
+                if (message.includes('特色') && message.includes('区别')) {
+                    return `
+                        <p>以下是我们网站介绍的AI工具的特色与区别：</p>
+                        <ul>
+                            <li><strong>ChatGPT</strong>：OpenAI开发的通用语言模型，擅长对话、写作、编程等多种任务</li>
+                            <li><strong>Midjourney</strong>：专注于图像生成，基于文本描述创建高质量图像</li>
+                            <li><strong>GitHub Copilot</strong>：专为开发者设计的代码助手，帮助编写代码和解决编程问题</li>
+                            <li><strong>Runway ML</strong>：AI视频编辑工具，提供多种视频处理功能</li>
+                            <li><strong>Seedance</strong>：AI视频生成模型，根据文本描述创建视频内容</li>
+                            <li><strong>DeepSeek</strong>：深度学习AI助手，专注于代码生成和问题解决</li>
+                            <li><strong>豆包</strong>：字节跳动推出的AI助手，支持多轮对话和知识问答</li>
+                            <li><strong>Gemini</strong>：Google的多模态AI模型，支持文本、图像、音频等多种输入</li>
+                            <li><strong>Sora</strong>：OpenAI的视频生成模型，创建逼真的视频内容</li>
+                        </ul>
+                    `;
+                }
+
+                // 处理关于写代码的推荐
+                if (message.includes('写代码')) {
+                    return `
+                        <p>如果您想写代码，我推荐以下AI工具：</p>
+                        <ul>
+                            <li><strong>GitHub Copilot</strong>：专为代码开发设计，与IDE集成，实时提供代码建议</li>
+                            <li><strong>DeepSeek</strong>：专注于代码生成和问题解决，提供高质量的代码解决方案</li>
+                            <li><strong>ChatGPT</strong>：通用语言模型，也能帮助编写和解释代码</li>
+                        </ul>
+                        <p>GitHub Copilot是专门为编程设计的，与开发环境无缝集成，是最佳选择。</p>
+                    `;
+                }
+
+                // 处理关于生成图像的推荐
+                if (message.includes('生成图像')) {
+                    return `
+                        <p>如果您想生成图像，我推荐以下AI工具：</p>
+                        <ul>
+                            <li><strong>Midjourney</strong>：目前最强大的AI图像生成工具之一，生成高质量、艺术风格的图像</li>
+                            <li><strong>Gemini</strong>：Google的多模态模型，也能根据描述生成图像</li>
+                        </ul>
+                        <p>Midjourney在图像生成方面有丰富的经验和强大的能力，是生成图像的首选工具。</p>
+                    `;
+                }
+
+                // 处理关于生成视频的推荐
+                if (message.includes('生成视频')) {
+                    return `
+                        <p>如果您想生成视频，我推荐以下AI工具：</p>
+                        <ul>
+                            <li><strong>Sora</strong>：OpenAI最新的视频生成模型，能够创建逼真、连贯的视频</li>
+                            <li><strong>Seedance</strong>：专注于视频生成，根据文本描述创建视频内容</li>
+                            <li><strong>Runway ML</strong>：提供多种视频处理和生成功能</li>
+                        </ul>
+                        <p>Sora是目前最先进的视频生成模型，能够创建高质量的视频内容。</p>
+                    `;
+                }
+
+                // 处理关于对话和知识问答的推荐
+                if (message.includes('对话') || message.includes('问答')) {
+                    return `
+                        <p>如果您想进行对话或知识问答，我推荐以下AI工具：</p>
+                        <ul>
+                            <li><strong>ChatGPT</strong>：通用语言模型，擅长多轮对话和知识问答</li>
+                            <li><strong>豆包</strong>：字节跳动推出的AI助手，支持多轮对话</li>
+                            <li><strong>Gemini</strong>：Google的多模态模型，也能进行智能对话</li>
+                        </ul>
+                        <p>ChatGPT在对话质量和知识覆盖方面表现出色，是对话和问答的理想选择。</p>
+                    `;
+                }
+
+                // 处理关于创意写作的推荐
+                if (message.includes('写作') || message.includes('创意')) {
+                    return `
+                        <p>如果您想进行创意写作，我推荐以下AI工具：</p>
+                        <ul>
+                            <li><strong>ChatGPT</strong>：擅长各种类型的写作，包括故事、文章、邮件等</li>
+                            <li><strong>Gemini</strong>：也能提供创意写作支持</li>
+                        </ul>
+                        <p>ChatGPT在创意写作方面有丰富的能力，能够适应各种写作风格和需求。</p>
+                    `;
+                }
+
+                // 默认回复
+                return `
+                    <p>我是AI工具智能助手，能够回答关于AI工具的问题。</p>
+                    <p>您可以问我：</p>
+                    <ul>
+                        <li>这些AI各自的特色与区别是什么？</li>
+                        <li>如果我想做XXXX事情，更推荐我用哪个AI？</li>
+                    </ul>
+                `;
+            }
+
+            // 发送按钮点击事件
+            sendBtn.addEventListener('click', sendMessage);
+
+            // 回车键发送消息
+            userInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+
+            // 快速问题按钮点击事件
+            quickQuestions.forEach(button => {
+                button.addEventListener('click', function() {
+                    const question = this.getAttribute('data-question');
+                    userInput.value = question;
+                    sendMessage();
+                });
+            });
+        });
+    </script>
 </body>
 </html>
