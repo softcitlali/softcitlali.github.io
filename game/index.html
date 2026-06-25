@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>植物大战僵尸 - 向日葵与豌豆射手</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="chooser-container">
+            <div class="sun-count">
+                <span class="sun-icon">🌻</span>
+                <span id="sun-value">50</span>
+            </div>
+            
+            <div class="plant-bar">
+                <div class="plant-card" data-plant="sunflower" draggable="true" ondragstart="handleDragStart(event)" ondragend="handleDragEnd(event)"></div>
+                <div class="plant-card" data-plant="peashooter" draggable="true" ondragstart="handleDragStart(event)" ondragend="handleDragEnd(event)"></div>
+            </div>
+        </div>
+        
+        <div class="selected-plant" id="selected-plant" style="display:none;">
+            选择植物
+        </div>
+        
+        <canvas id="game-canvas" width="900" height="600" ondragover="handleDragOver(event)" ondrop="handleDrop(event)"></canvas>
+        
+        <div class="controls">
+            <button onclick="startWave()">开始僵尸波次</button>
+            <button onclick="resetGame()">重置游戏</button>
+        </div>
+    </div>
+    
+    <script src="game.js"></script>
+</body>
+</html>

@@ -1,0 +1,158 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.game-container {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.chooser-container {
+    background-image: url('ChooserBackground/ChooserBackground.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    gap: 20px;
+}
+
+.sun-count {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #ffd700;
+    min-width: 100px;
+    padding-left: 20px;
+}
+
+.sun-icon {
+    font-size: 32px;
+}
+
+.selected-plant {
+    font-size: 18px;
+    color: #fff;
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+}
+
+.plant-bar {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.plant-card {
+    border: 2px solid transparent;
+    border-radius: 8px;
+    cursor: grab;
+    transition: all 0.3s ease;
+    min-width: 60px;
+    height: 80px;
+    user-select: none;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.plant-card[data-plant="sunflower"] {
+    background-image: url('cards/card_sunflower.png');
+}
+
+.plant-card[data-plant="peashooter"] {
+    background-image: url('cards/card_peashooter.png');
+}
+
+.plant-card:active {
+    cursor: grabbing;
+}
+
+.plant-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 3px 10px rgba(74, 143, 64, 0.5);
+}
+
+.plant-card.selected {
+    border-color: #ffd700;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+}
+
+.plant-card.disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.plant-card.disabled[data-plant="sunflower"] {
+    background-image: url('cards/card_sunflower2.png');
+}
+
+.plant-card.disabled[data-plant="peashooter"] {
+    background-image: url('cards/card_peashooter2.png');
+}
+
+.plant-card.disabled:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+.plant-card.disabled:active {
+    cursor: not-allowed;
+}
+
+#game-canvas {
+    border: 3px solid #4a8f40;
+    border-radius: 10px;
+    background: #2d5a27;
+    display: block;
+    transition: box-shadow 0.3s ease;
+}
+
+#game-canvas.drag-over {
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+    border-color: #ffd700;
+}
+
+.controls {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+.controls button {
+    padding: 12px 30px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    background: linear-gradient(145deg, #c0392b, #a93226);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.controls button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(192, 57, 43, 0.5);
+}
